@@ -1,0 +1,60 @@
+------------------------------------------------------------------------
+//Sketch Para os Leds
+
+int led1=13;
+int led2=8;
+void setup(){
+  //start serial connection
+  Serial.begin(9600);
+
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT); 
+
+}
+char tecla;
+void loop(){  
+  if (Serial.available()){
+    tecla = Serial.read();
+    if(tecla == 'a')
+    {
+      digitalWrite(led1, HIGH);
+      digitalWrite(led2, LOW);
+    }
+    else if (tecla=='v'){
+      digitalWrite(led2, HIGH);
+      digitalWrite(led1, LOW);
+    }
+    else {
+      digitalWrite(led2, LOW);
+      digitalWrite(led1, LOW);
+    }
+  }
+}
+
+------------------------------------------------------------------------
+//Sketch Para o Servo Motor
+
+#include <Servo.h>
+
+Servo myservo;  // create servo object to control a servo
+String val;    // variable to read the value from the analog pin
+int valor;
+
+void setup() {
+  myservo.attach(A0);  // attaches the servo on pin 9 to the servo object
+  myservo.write(0);
+  Serial.begin(9600);
+}
+
+void loop() {
+    if(Serial.available()) {
+        val = Serial.readString();
+        Serial.println(val);
+        valor = val.toInt(); 
+        //valor = map(valor, 0, 1023, 0, 180);  // funcao para escalonar valores do potenciomentro
+        myservo.write(valor);                  // sets the servo position according to the scaled value
+        delay(15); 
+    }
+    
+    //val = map(val, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
+}
